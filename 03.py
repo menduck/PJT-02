@@ -1,10 +1,27 @@
 import requests
 from pprint import pprint
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 def ranking():
-    pass
-    # 여기에 코드를 작성합니다.
+  url = f'https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}'
+
+  res = requests.get(url).json()
+  popular_data = res['results']
+
+  top5_movies = sorted(popular_data, key = lambda x :x['vote_average'], reverse=True)[0:5]
+  return top5_movies
+    
+  # 딕셔너리에 id : vote_average 를 넣어 top5를 추려서 id로 popular_data에서 뽑으려고 함.
+  # vote_average_dict = {}
+  # for i in range(len(popular_data)): 
+  #   vote_average_dict[popular_data[i]['id']] = popular_data[i]['vote_average']
+  # top5_movie = sorted(vote_average_dict.items(), key=lambda x:x[1], reverse= True)[0:5]
+
+    
 
 
 # 아래의 코드는 수정하지 않습니다.

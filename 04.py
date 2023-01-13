@@ -1,10 +1,22 @@
 import requests
 from pprint import pprint
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 def search_movie(title):
-    pass
-    # 여기에 코드를 작성합니다.
+    url = f'https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=ko-KR&query={title}&region=KR'
+
+    res = requests.get(url).json()
+    data = res['results']
+    target_movie_id = data[0]['id']
+
+    try:
+        return target_movie_id
+    except:
+        return None
 
 
 # 아래의 코드는 수정하지 않습니다.
