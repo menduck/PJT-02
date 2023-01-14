@@ -6,29 +6,22 @@ from dotenv import load_dotenv
 load_dotenv()
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
-def search_movie(title):
-    url = f'https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=ko-KR&query={title}&region=KR'
-
-    res = requests.get(url).json()
-    data = res['results']
-    target_movie_id = data[0]['id']
-
-    try:
-        return target_movie_id
-    except:
-        return None
+import f04
 
 def recommendation(title):
-    movie_id = search_movie(title)
+    try :
+        movie_id = f04.search_movie(title)
+        recommendation_url = f'https://api.themoviedb.org/3/movie/{movie_id}/recommendations?api_key={TMDB_API_KEY}&language=ko-KR'
 
-    recommendation_url = f'https://api.themoviedb.org/3/movie/{movie_id}/recommendations?api_key={TMDB_API_KEY}&language=ko-KR&page=1'
+        res = requests.get(recommendation_url).json()
+        rocommedation_data = res.get('results')
+        recommendation_movies_list = []
+        for movie in rocommedation_data:
+            recommendation_movies_list.append(movie.get('title'))
+        return recommendation_movies_list
 
-    res = requests.get(recommendation_url).json().get('results')
-    recommendation_movie_list = []
-    for i in res:
-        recommendation_movie_list.append(i.get('title'))
-    return recommendation_movie_list
-
+    except:
+        return None
 
 
 

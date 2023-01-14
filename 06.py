@@ -6,29 +6,18 @@ from dotenv import load_dotenv
 load_dotenv()
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
-def search_movie(title):
-    url = f'https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=ko-KR&query={title}&region=KR'
-
-    res = requests.get(url).json()
-    data = res['results']
-    target_movie_id = data[0]['id']
-
-    try:
-        return target_movie_id
-    except:
-        return None
-
+import f04
 def credits(title):
-    movie_id = search_movie(title)
-    credits_url = f'https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={TMDB_API_KEY}&language=ko-KR'
-
-    res = requests.get(credits_url).json()
-    casts = res.get('cast')
-    crews = res.get('crew')
-
-    casts = [i['name'] for i in casts if i.get("cast_id") < 10]
-    directing = [i['name'] for i in crews if i.get("department") == "Directing"]
     try :
+        movie_id = f04.search_movie(title)
+        credits_url = f'https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={TMDB_API_KEY}&language=ko-KR'
+
+        res = requests.get(credits_url).json()
+        casts = res.get('cast')
+        crews = res.get('crew')
+
+        casts = [cast['name'] for cast in casts if cast.get("cast_id") < 10]
+        directing = [crew['name'] for crew in crews if crew.get("department") == "Directing"]
         return {'cast': casts, 'directing': directing}
     except:
         return None

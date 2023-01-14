@@ -7,13 +7,16 @@ load_dotenv()
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 def vote_average_movies():
-    url = f'https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}'  
+    url = f'https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=ko-KR'  
 
-    # res = requests.get(url).json()
-    # popular_data = res['results']
+    res = requests.get(url).json()
+    popular_data = res['results']
 
+    return [movie for movie in popular_data if movie['vote_average'] >= 8]
+
+    # 빈 배열을 만들어 평점이 8점 이상인 영화를 추가하는 방법
+    # 바로 list에 넣는 위의 방식보단 가독성이 더 있다.
     # vote_average_8_morethan_movies = []
-
     # for i in range(len(popular_data)) :
     #   if popular_data[i]['vote_average'] >= 8 :
     #     vote_average_8_morethan_movies.append(popular_data[i])
